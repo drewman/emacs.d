@@ -32,7 +32,10 @@ packages are already installed which improves startup time."
              :config
              (ivy-mode 1)
              (setq ivy-use-virtual-buffers t)
-             (setq ivy-count-format "(%d/%d) "))
+             (setq ivy-count-format "(%d/%d) ")
+             ;;FUZZY SEARCHING EVERYWHERE :DDD
+             (setq ivy-re-builders-alist
+                   '((t . ivy--regex-fuzzy))))
 
 (use-package counsel
              :after ivy)
