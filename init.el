@@ -77,6 +77,8 @@ packages are already installed which improves startup time."
 ;;start emacs maximized
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+;;<3 paren mode
+(show-paren-mode 1)
 ;;(autoload 'dired-async-mode "dired-async.el" nil t)
 ;;(dired-async-mode 1)
 
