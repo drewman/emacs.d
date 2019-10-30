@@ -8,27 +8,53 @@
              '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-(require 'ivy)
-(ivy-mode 1)
+(defun my/package-installed-p (pkg)
+  "Check if package is installed. In emacs26 package-installed-p
+seems to require package-initialize iff the package is *not*
+installed. This prevents calling package-initialized if all
+packages are already installed which improves startup time."
+  (condition-case nil
+      (package-installed-p pkg)
+    (error
+     (package-initialize)
+     (package-installed-p pkg))))
 
-(require 'evil)
-(evil-mode 1)
+(when (not (my/package-installed-p 'use-package))
+  (package-refresh-contents)
+  (package-install 'use-package))
 
-(require 'neotree)
-(global-set-key [f8] 'neotree-toggle)
-(evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
-(evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
-(evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
-(evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
-(evil-define-key 'normal neotree-mode-map (kbd "g") 'neotree-refresh)
-(evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
-(evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
-(evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
-(evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle)
+(eval-when-compile
+  (require 'use-package))
 
+(use-package ivy
+             :ensure t
+             :config
+             (ivy-mode 1))
 
-(require 'which-key)
-(which-key-mode)
+(use-package evil
+             :ensure t
+             :config
+             (evil-mode 1))
+
+(use-package neotree
+             :ensure t
+             :requires evil
+             :config
+             (global-set-key [f8] 'neotree-toggle)
+             (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+             (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+             (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+             (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+             (evil-define-key 'normal neotree-mode-map (kbd "g") 'neotree-refresh)
+             (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
+             (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
+             (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
+             (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle))
+
+(use-package which-key
+             :ensure t
+             :config
+             (which-key-mode))
 
 ;;start emacs maximized
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
