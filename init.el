@@ -26,24 +26,22 @@ packages are already installed which improves startup time."
 (eval-when-compile
   (require 'use-package))
 
+(setq use-package-always-ensure t)
+
 (use-package ivy
-             :ensure t
              :config
              (ivy-mode 1)
              (setq ivy-use-virtual-buffers t)
              (setq ivy-count-format "(%d/%d) "))
 
 (use-package counsel
-             :after ivy
-             :ensure t)
+             :after ivy)
 
 (use-package evil
-             :ensure t
              :config
              (evil-mode 1))
 
 (use-package neotree
-             :ensure t
              :requires evil
              :config
              (global-set-key [f8] 'neotree-toggle)
@@ -58,12 +56,10 @@ packages are already installed which improves startup time."
              (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle))
 
 (use-package which-key
-             :ensure t
              :config
              (which-key-mode))
 
-(use-package general
-             :ensure t)
+(use-package general)
 
 (general-create-definer my-leader-def
   ;; :prefix my-leader
