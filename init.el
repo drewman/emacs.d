@@ -62,6 +62,19 @@ packages are already installed which improves startup time."
              :config
              (which-key-mode))
 
+(use-package general
+             :ensure t)
+
+(general-create-definer my-leader-def
+  ;; :prefix my-leader
+  :prefix "SPC")
+
+(my-leader-def
+  :keymaps 'normal
+  ;; bind "SPC a"
+  "f" 'counsel-find-file
+  "x" 'counsel-M-x)
+
 ;;start emacs maximized
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
@@ -93,7 +106,7 @@ packages are already installed which improves startup time."
  '(frame-background-mode (quote dark))
  '(package-selected-packages
    (quote
-    (neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
+    (general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
    (quote
