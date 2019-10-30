@@ -29,7 +29,13 @@ packages are already installed which improves startup time."
 (use-package ivy
              :ensure t
              :config
-             (ivy-mode 1))
+             (ivy-mode 1)
+             (setq ivy-use-virtual-buffers t)
+             (setq ivy-count-format "(%d/%d) "))
+
+(use-package counsel
+             :after ivy
+             :ensure t)
 
 (use-package evil
              :ensure t
