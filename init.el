@@ -83,13 +83,10 @@ packages are already installed which improves startup time."
 
 ;;<3 paren mode
 (show-paren-mode 1)
-;;(autoload 'dired-async-mode "dired-async.el" nil t)
-;;(dired-async-mode 1)
 
-;;(require 'helm-config)
-;;(helm-mode 1)
+;;hate tabs
+(setq-default indent-tabs-mode nil)
 
-;;(global-set-key (kbd "M-x") 'helm-M-x)
 ;; custom shit:
 ;; TODO: move to separate file
 (custom-set-variables
