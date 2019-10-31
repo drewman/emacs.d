@@ -67,7 +67,7 @@ packages are already installed which improves startup time."
 ;; SPACEMACS-like keybinding
 (general-define-key
   :prefix "SPC"
-  :keymaps 'normal
+  :states 'normal
   "f" 'counsel-find-file
   "x" 'counsel-M-x
 
@@ -77,6 +77,12 @@ packages are already installed which improves startup time."
   "s b" '(evil-scroll-page-up :wk "page-up")
   "s d" '(evil-scroll-down :wk "scroll down")
   "s u" '(evil-scroll-up :wk "scroll up"))
+
+;; Bind these to control for use in visual-mode
+(general-define-key
+ :states 'visual
+ "C-c c" 'comment-region
+ "C-c u" 'uncomment-region)
 
 ;;start emacs maximized
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
