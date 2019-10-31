@@ -64,15 +64,19 @@ packages are already installed which improves startup time."
 
 (use-package general)
 
-(general-create-definer my-leader-def
-  ;; :prefix my-leader
-  :prefix "SPC")
-
-(my-leader-def
+;; SPACEMACS-like keybinding
+(general-define-key
+  :prefix "SPC"
   :keymaps 'normal
-  ;; bind "SPC a"
   "f" 'counsel-find-file
-  "x" 'counsel-M-x)
+  "x" 'counsel-M-x
+
+  ;; scrolling shortcuts
+  "s" '(nil :wk "scroll")
+  "s f" '(evil-scroll-page-down :wk "page-down")
+  "s b" '(evil-scroll-page-up :wk "page-up")
+  "s d" '(evil-scroll-down :wk "scroll down")
+  "s u" '(evil-scroll-up :wk "scroll up"))
 
 ;;start emacs maximized
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
