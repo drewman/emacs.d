@@ -27,6 +27,14 @@ packages are already installed which improves startup time."
   (require 'use-package))
 
 (setq use-package-always-ensure t)
+(tool-bar-mode -1)
+
+(setq user-init-file (or load-file-name (buffer-file-name)))
+(setq user-emacs-directory (file-name-directory user-init-file))
+
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook))
 
 (use-package ivy
              :config
@@ -71,6 +79,12 @@ packages are already installed which improves startup time."
   "f" 'counsel-find-file
   "x" 'counsel-M-x
 
+  ;; bookmark shortcuts
+  "b" '(nil :wk "bookmarks")
+  "b m" 'bookmark-set
+  "b b" 'bookmark-jump
+  "b l" '((lambda () (interactive) (call-interactively 'bookmark-bmenu-list)) :wk "list bookmarks")
+  
   ;; scrolling shortcuts
   "s" '(nil :wk "scroll")
   "s f" '(evil-scroll-page-down :wk "page-down")
@@ -92,6 +106,8 @@ packages are already installed which improves startup time."
 
 ;;hate tabs
 (setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
 
 ;; custom shit:
 ;; TODO: move to separate file
@@ -101,41 +117,41 @@ packages are already installed which improves startup time."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
-   [default bold shadow italic underline bold bold-italic bold])
+        [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
-   (vector "#1d1f21" "#cc6666" "#b5bd68" "#f0c674" "#81a2be" "#b294bb" "#8abeb7" "#c5c8c6"))
+        (vector "#1d1f21" "#cc6666" "#b5bd68" "#f0c674" "#81a2be" "#b294bb" "#8abeb7" "#c5c8c6"))
  '(beacon-color "#cc6666")
  '(custom-enabled-themes (quote (sanityinc-tomorrow-eighties)))
  '(custom-safe-themes
-   (quote
-    ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" default)))
+        (quote
+         ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" default)))
  '(fci-rule-color "#373b41")
  '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
  '(frame-background-mode (quote dark))
  '(package-selected-packages
-   (quote
-    (general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
+        (quote
+         (dashboard magit yaml-mode general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
-   (quote
-    ((20 . "#cc6666")
-     (40 . "#de935f")
-     (60 . "#f0c674")
-     (80 . "#b5bd68")
-     (100 . "#8abeb7")
-     (120 . "#81a2be")
-     (140 . "#b294bb")
-     (160 . "#cc6666")
-     (180 . "#de935f")
-     (200 . "#f0c674")
-     (220 . "#b5bd68")
-     (240 . "#8abeb7")
-     (260 . "#81a2be")
-     (280 . "#b294bb")
-     (300 . "#cc6666")
-     (320 . "#de935f")
-     (340 . "#f0c674")
-     (360 . "#b5bd68"))))
+        (quote
+         ((20 . "#cc6666")
+          (40 . "#de935f")
+          (60 . "#f0c674")
+          (80 . "#b5bd68")
+          (100 . "#8abeb7")
+          (120 . "#81a2be")
+          (140 . "#b294bb")
+          (160 . "#cc6666")
+          (180 . "#de935f")
+          (200 . "#f0c674")
+          (220 . "#b5bd68")
+          (240 . "#8abeb7")
+          (260 . "#81a2be")
+          (280 . "#b294bb")
+          (300 . "#cc6666")
+          (320 . "#de935f")
+          (340 . "#f0c674")
+          (360 . "#b5bd68"))))
  '(vc-annotate-very-old-color nil)
  '(window-divider-mode nil))
 (custom-set-faces
