@@ -71,6 +71,7 @@ packages are already installed which improves startup time."
              (which-key-mode))
 
 (use-package general)
+(use-package color-theme-sanityinc-tomorrow)
 
 ;; SPACEMACS-like keybinding
 (general-define-key
@@ -84,19 +85,34 @@ packages are already installed which improves startup time."
   "b m" 'bookmark-set
   "b b" 'bookmark-jump
   "b l" '((lambda () (interactive) (call-interactively 'bookmark-bmenu-list)) :wk "list bookmarks")
+
+  ;; buffer shortcuts
+  "u" '(nil :wk "buffer")
+  "u k" 'kill-buffer
+  "u e" 'eval-buffer
+  "u l" 'list-buffers
   
   ;; scrolling shortcuts
   "s" '(nil :wk "scroll")
   "s f" '(evil-scroll-page-down :wk "page-down")
   "s b" '(evil-scroll-page-up :wk "page-up")
   "s d" '(evil-scroll-down :wk "scroll down")
-  "s u" '(evil-scroll-up :wk "scroll up"))
+  "s u" '(evil-scroll-up :wk "scroll up")
+
+  ;; open stuff
+  "o" '(nil :wk "open")
+  "o t" '(term :wk "terminal"))
 
 ;; Bind these to control for use in visual-mode
 (general-define-key
  :states 'visual
+ ;;comments
  "C-c c" 'comment-region
  "C-c u" 'uncomment-region)
+
+(general-define-key
+    :states '(visual normal)
+    "C-s" 'save-buffer)
 
 ;;start emacs maximized
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -130,7 +146,7 @@ packages are already installed which improves startup time."
  '(frame-background-mode (quote dark))
  '(package-selected-packages
         (quote
-         (dashboard magit yaml-mode general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
+         (powerline-evil dashboard magit yaml-mode general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
         (quote
