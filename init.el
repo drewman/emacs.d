@@ -32,6 +32,19 @@ packages are already installed which improves startup time."
 (setq user-init-file (or load-file-name (buffer-file-name)))
 (setq user-emacs-directory (file-name-directory user-init-file))
 
+(setq initial-scratch-message ";;C-j evaluate\n;;C-x C-f to save buffer\n\n")
+
+;;get default shell
+(setq my/osx-brew-zsh "/usr/local/bin/zsh")
+(setq my/default-zsh "/bin/zsh")
+(setq my/default-bash "/bin/bash")
+(setq my/default-shell
+      (if (file-exists-p my/osx-brew-zsh)
+          my/osx-brew-zsh
+        (if (file-exists-p my/default-zsh)
+            my/default-zsh
+          my/default-bash)))
+
 (use-package dashboard
   :config
   (dashboard-setup-startup-hook))
@@ -73,6 +86,11 @@ packages are already installed which improves startup time."
 (use-package general)
 (use-package color-theme-sanityinc-tomorrow)
 
+(use-package multi-term
+    :config
+    (setq multi-term-program my/default-shell)
+    (setq multi-term-dedicated-select-after-open-p t))
+
 ;; SPACEMACS-like keybinding
 (general-define-key
   :prefix "SPC"
@@ -99,9 +117,12 @@ packages are already installed which improves startup time."
   "s d" '(evil-scroll-down :wk "scroll down")
   "s u" '(evil-scroll-up :wk "scroll up")
 
-  ;; open stuff
-  "o" '(nil :wk "open")
-  "o t" '(term :wk "terminal"))
+  ;; terminal
+  "t" '(nil :wk "terminal")
+  "t o" '(multi-term :wk "open terminal")
+  "t t" '(multi-term-dedicated-toggle :wk "mini-term toggle")
+  "t n" '(multi-term-next :wk "next terminal")
+  "t p" '(multi-term-prev :wk "prev terminal"))
 
 ;; Bind these to control for use in visual-mode
 (general-define-key
@@ -169,6 +190,7 @@ packages are already installed which improves startup time."
           (340 . "#f0c674")
           (360 . "#b5bd68"))))
  '(vc-annotate-very-old-color nil)
+ '(vterm-shell "/usr/local/bin/zsh")
  '(window-divider-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
