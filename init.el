@@ -45,10 +45,13 @@ packages are already installed which improves startup time."
             my/default-zsh
           my/default-bash)))
 
+;; dashboard could use some setup
 (use-package dashboard
   :config
-  (dashboard-setup-startup-hook))
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner 'logo))
 
+;; TODO: consider switching to helm
 (use-package ivy
              :config
              (ivy-mode 1)
@@ -61,6 +64,23 @@ packages are already installed which improves startup time."
 (use-package counsel
              :after ivy)
 
+;;                             ,-.                               
+;;        ___,---.__          /'|`\          __,---,___          
+;;     ,-'    \`    `-.____,-'  |  `-.____,-'    //    `-.       
+;;   ,'        |           ~'\     /`~           |        `.      
+;;  /      ___//              `. ,'          ,  , \___      \    
+;; |    ,-'   `-.__   _         |        ,    __,-'   `-.    |    
+;; |   /          /\_  `   .    |    ,      _/\          \   |   
+;; \  |           \ \`-.___ \   |   / ___,-'/ /           |  /  
+;;  \  \           | `._   `\\  |  //'   _,' |           /  /      
+;;   `-.\         /'  _ `---'' , . ``---' _  `\         /,-'     
+;;      ``       /     \    ,='/ \`=.    /     \       ''          
+;;              |__   /|\_,--.,-.--,--._/|\   __|                  
+;;              /  `./  \\`\ |  |  | /,//' \,'  \                  
+;; eViL        /   /     ||--+--|--+-/-|     \   \                 
+;;            |   |     /'\_\_\ | /_/_/`\     |   |                
+;;             \   \__, \_     `~'     _/ .__/   /            
+;;              `-._,-'   `-._______,-'   `-._,-'
 (use-package evil
              :config
              (evil-mode 1))
@@ -92,6 +112,7 @@ packages are already installed which improves startup time."
     (setq multi-term-dedicated-select-after-open-p t))
 
 ;; SPACEMACS-like keybinding
+;; TODO: look into moving to evil-leader (general.el feels like a bit much)
 (general-define-key
   :prefix "SPC"
   :states 'normal
@@ -133,15 +154,16 @@ packages are already installed which improves startup time."
 
 (general-define-key
     :states '(visual normal)
+    ;; so i stop spamming search ;)
     "C-s" 'save-buffer)
 
 ;;start emacs maximized
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-;;<3 paren mode
+;;paren mode is love; paren mode is life
 (show-paren-mode 1)
 
-;;hate tabs
+;;hate tabs -- don't current like this setup need to redo indentation
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 (setq indent-line-function 'insert-tab)
