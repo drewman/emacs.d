@@ -106,6 +106,19 @@ packages are already installed which improves startup time."
 
 (use-package general)
 (use-package color-theme-sanityinc-tomorrow)
+(use-package flycheck
+  :init (global-flycheck-mode))
+(use-package flycheck-pos-tip
+  :after flycheck
+  :init (flycheck-pos-tip-mode))
+
+(use-package projectile
+  :config
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (projectile-mode +1))
+
+ (use-package company
+  :init (global-company-mode))
 
 (use-package multi-term
     :config
@@ -119,6 +132,7 @@ packages are already installed which improves startup time."
   :states 'normal
   "f" 'counsel-find-file
   "x" 'counsel-M-x
+  "p" 'projectile-mode-map
 
   ;; bookmark shortcuts
   "b" '(nil :wk "bookmarks")
@@ -129,8 +143,10 @@ packages are already installed which improves startup time."
   ;; buffer shortcuts
   "u" '(nil :wk "buffer")
   "u k" 'kill-buffer
+  "u c" 'kill-current-buffer
   "u e" 'eval-buffer
   "u l" 'list-buffers
+  "u s" 'switch-to-buffer
   
   ;; scrolling shortcuts
   "s" '(nil :wk "scroll")
@@ -157,6 +173,10 @@ packages are already installed which improves startup time."
     :states '(visual normal)
     ;; so i stop spamming search ;)
     "C-s" 'save-buffer)
+
+(general-define-key
+    :states 'normal
+    "C-c TAB" 'company-complete)
 
 ;;start emacs maximized
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -187,10 +207,11 @@ packages are already installed which improves startup time."
          ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" default)))
  '(fci-rule-color "#373b41")
  '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
+ '(flycheck-pos-tip-mode t)
  '(frame-background-mode (quote dark))
  '(package-selected-packages
         (quote
-         (powerline-evil dashboard magit yaml-mode general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
+         (company-mode projectile flycheck-pos-tip flycheck powerline-evil dashboard magit yaml-mode general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
         (quote
