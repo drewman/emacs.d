@@ -28,6 +28,7 @@ packages are already installed which improves startup time."
 
 (setq use-package-always-ensure t)
 (tool-bar-mode -1)
+(global-display-line-numbers-mode)
 
 (setq user-init-file (or load-file-name (buffer-file-name)))
 (setq user-emacs-directory (file-name-directory user-init-file))
