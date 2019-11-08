@@ -36,10 +36,10 @@ packages are already installed which improves startup time."
 (setq initial-scratch-message ";;C-j evaluate\n;;C-x C-f to save buffer\n\n")
 
 ;;get default shell
-(setq my/osx-brew-zsh "/usr/local/bin/zsh")
-(setq my/default-zsh "/bin/zsh")
-(setq my/default-bash "/bin/bash")
-(setq my/default-shell
+(defvar my/osx-brew-zsh "/usr/local/bin/zsh")
+(defvar my/default-zsh "/bin/zsh")
+(defvar my/default-bash "/bin/bash")
+(defvar my/default-shell
       (if (file-exists-p my/osx-brew-zsh)
           my/osx-brew-zsh
         (if (file-exists-p my/default-zsh)
@@ -125,6 +125,24 @@ packages are already installed which improves startup time."
     (setq multi-term-program my/default-shell)
     (setq multi-term-dedicated-select-after-open-p t))
 
+(use-package org
+  :config
+  (setq org-log-done t))
+
+(use-package evil-org
+  :after org
+  :config
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  (add-hook 'evil-org-mode-hook
+            (lambda ()
+              (evil-org-set-key-theme)))
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
+
+(use-package org-bullets
+    :config
+    (add-hook 'org-mode-hook 'org-bullets-mode))
+
 ;; SPACEMACS-like keybinding
 ;; TODO: look into moving to evil-leader (general.el feels like a bit much)
 (general-define-key
@@ -146,7 +164,7 @@ packages are already installed which improves startup time."
   "u c" 'kill-current-buffer
   "u e" 'eval-buffer
   "u l" 'list-buffers
-  "u s" 'switch-to-buffer
+  "u u" 'switch-to-buffer
   
   ;; scrolling shortcuts
   "s" '(nil :wk "scroll")
@@ -211,7 +229,7 @@ packages are already installed which improves startup time."
  '(frame-background-mode (quote dark))
  '(package-selected-packages
         (quote
-         (company-mode projectile flycheck-pos-tip flycheck powerline-evil dashboard magit yaml-mode general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
+         (org-bullets evil-org company-mode projectile flycheck-pos-tip flycheck powerline-evil dashboard magit yaml-mode general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
         (quote
