@@ -52,6 +52,14 @@ packages are already installed which improves startup time."
   (dashboard-setup-startup-hook)
   (setq dashboard-startup-banner 'logo))
 
+(use-package markdown-mode
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode)))
+
+(use-package gh-md
+  :after markdown-mode)
+
 ;; TODO: consider switching to helm
 (use-package ivy
              :config
@@ -64,6 +72,15 @@ packages are already installed which improves startup time."
 
 (use-package counsel
              :after ivy)
+
+(use-package highlight-indentation
+  :config
+  (highlight-indentation-current-column-mode)
+  (setq highlight-indentation-blank-lines t))
+
+(use-package smartparens
+    :config
+    (smartparens-global-mode 1))
 
 ;;                             ,-.
 ;;        ___,---.__          /'|`\          __,---,___
@@ -118,7 +135,9 @@ packages are already installed which improves startup time."
   (projectile-mode +1))
 
  (use-package company
-  :init (global-company-mode))
+   :init (global-company-mode)
+   :config
+   (setq company-dabbrev-downcase nil))
 
 (use-package multi-term
     :config
