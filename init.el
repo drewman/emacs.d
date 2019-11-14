@@ -163,9 +163,19 @@ packages are already installed which improves startup time."
 ;;            |   |     /'\_\_\ | /_/_/`\     |   |
 ;;             \   \__, \_     `~'     _/ .__/   /
 ;;              `-._,-'   `-._______,-'   `-._,-'
+
+(defun my/ex-save-kill-buffer-and-close ()
+    (interactive)
+    (save-buffer)
+    (kill-buffer-and-window)
+)
+
 (use-package evil
              :config
+             (evil-ex-define-cmd "q[uit]" 'kill-buffer-and-window)
+             (evil-ex-define-cmd "wq" 'my/ex-save-kill-buffer-and-close)
              (evil-mode 1))
+
 
 ;; SECTION -- project management
 (use-package neotree
