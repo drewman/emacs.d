@@ -74,13 +74,20 @@ packages are already installed which improves startup time."
 (use-package counsel
              :after ivy)
 
-(use-package highlight-indentation
+(use-package indent-guide
   :config
-  (highlight-indentation-current-column-mode)
-  (setq highlight-indentation-blank-lines t))
+  (set-face-background 'indent-guide-face "red")
+  (indent-guide-global-mode))
+
+(use-package rainbow-delimiters
+  :config
+  (add-hook 'groovy-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'python-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode))
 
 (use-package smartparens
     :config
+    (require 'smartparens-config)
     (smartparens-global-mode 1))
 
 ;;                             ,-.
