@@ -1,4 +1,5 @@
 
+;; SECTION -- packaging
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -27,15 +28,42 @@ packages are already installed which improves startup time."
   (require 'use-package))
 
 (setq use-package-always-ensure t)
+
+;; SECTION -- window settings
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (global-display-line-numbers-mode)
+;;start emacs maximized
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (setq user-init-file (or load-file-name (buffer-file-name)))
 (setq user-emacs-directory (file-name-directory user-init-file))
 
 (setq initial-scratch-message ";;C-j evaluate\n;;C-x C-f to save buffer\n\n")
 
+(use-package color-theme-sanityinc-tomorrow)
+
+;; dashboard could use some setup
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner 'logo))
+
+;; SECTION -- files
+;;https://emacsredux.com/blog/2013/05/09/keep-backup-and-auto-save-files-out-of-the-way/
+;; store all backup and autosave files in the tmp dir
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+
+;; Keep emacs "custom" settings in separate file and load it
+(setq custom-file (expand-file-name "custom-file.el" user-emacs-directory))
+(unless (file-exists-p custom-file)
+  (write-region "" nil custom-file))
+(load custom-file)
+
+;; SECTION -- terminal
 ;;get default shell
 (defvar my/osx-brew-zsh "/usr/local/bin/zsh")
 (defvar my/default-zsh "/bin/zsh")
@@ -47,12 +75,12 @@ packages are already installed which improves startup time."
             my/default-zsh
           my/default-bash)))
 
-;; dashboard could use some setup
-(use-package dashboard
-  :config
-  (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner 'logo))
+(use-package multi-term
+    :config
+    (setq multi-term-program my/default-shell)
+    (setq multi-term-dedicated-select-after-open-p t))
 
+;; SECTION -- coding modes
 (use-package markdown-mode
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
@@ -61,6 +89,7 @@ packages are already installed which improves startup time."
 (use-package gh-md
   :after markdown-mode)
 
+;; SECTION -- Completion
 ;; TODO: consider switching to helm
 (use-package ivy
              :config
@@ -73,6 +102,31 @@ packages are already installed which improves startup time."
 
 (use-package counsel
              :after ivy)
+
+(use-package company
+   :init (global-company-mode)
+   :config
+   (setq company-dabbrev-downcase nil))
+
+(use-package which-key
+             :config
+             (which-key-mode))
+
+(use-package flycheck
+  :init (global-flycheck-mode))
+
+(use-package flycheck-pos-tip
+  :after flycheck
+  :init (flycheck-pos-tip-mode))
+
+;; SECTION -- indention // parens
+;;paren mode is love; paren mode is life
+(show-paren-mode 1)
+
+;;hate tabs -- don't current like this setup need to redo indentation
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
 
 (use-package indent-guide
   :config
@@ -90,6 +144,7 @@ packages are already installed which improves startup time."
     (require 'smartparens-config)
     (smartparens-global-mode 1))
 
+;; SECTION -- EVIL
 ;;                             ,-.
 ;;        ___,---.__          /'|`\          __,---,___
 ;;     ,-'    \`    `-.____,-'  |  `-.____,-'    //    `-.
@@ -111,6 +166,7 @@ packages are already installed which improves startup time."
              :config
              (evil-mode 1))
 
+;; SECTION -- project management
 (use-package neotree
              :requires evil
              :config
@@ -125,33 +181,12 @@ packages are already installed which improves startup time."
              (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
              (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle))
 
-(use-package which-key
-             :config
-             (which-key-mode))
-
-(use-package general)
-(use-package color-theme-sanityinc-tomorrow)
-(use-package flycheck
-  :init (global-flycheck-mode))
-(use-package flycheck-pos-tip
-  :after flycheck
-  :init (flycheck-pos-tip-mode))
-
 (use-package projectile
   :config
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (projectile-mode +1))
 
- (use-package company
-   :init (global-company-mode)
-   :config
-   (setq company-dabbrev-downcase nil))
-
-(use-package multi-term
-    :config
-    (setq multi-term-program my/default-shell)
-    (setq multi-term-dedicated-select-after-open-p t))
-
+;; SECTION -- ORG MODE
 (use-package org
   :config
   (setq org-log-done t))
@@ -170,8 +205,10 @@ packages are already installed which improves startup time."
     :config
     (add-hook 'org-mode-hook 'org-bullets-mode))
 
+;; SECTION -- general keybindings
 ;; SPACEMACS-like keybinding
 ;; TODO: look into moving to evil-leader (general.el feels like a bit much)
+(use-package general)
 (general-define-key
   :prefix "SPC"
   :states 'normal
@@ -223,26 +260,3 @@ packages are already installed which improves startup time."
     :states 'normal
     "C-c TAB" 'company-complete)
 
-;;start emacs maximized
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-
-;;paren mode is love; paren mode is life
-(show-paren-mode 1)
-
-;;hate tabs -- don't current like this setup need to redo indentation
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
-(setq indent-line-function 'insert-tab)
-
-;;https://emacsredux.com/blog/2013/05/09/keep-backup-and-auto-save-files-out-of-the-way/
-;; store all backup and autosave files in the tmp dir
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
-
-;; Keep emacs "custom" settings in separate file and load it
-(setq custom-file (expand-file-name "custom-file.el" user-emacs-directory))
-(unless (file-exists-p custom-file)
-  (write-region "" nil custom-file))
-(load custom-file)
