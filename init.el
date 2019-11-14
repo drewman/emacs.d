@@ -42,6 +42,7 @@ packages are already installed which improves startup time."
 (setq initial-scratch-message ";;C-j evaluate\n;;C-x C-f to save buffer\n\n")
 
 (use-package color-theme-sanityinc-tomorrow)
+(load-theme 'sanityinc-tomorrow-eighties)
 
 ;; dashboard could use some setup
 (use-package dashboard
