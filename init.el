@@ -172,8 +172,9 @@ packages are already installed which improves startup time."
 
 (use-package evil
              :config
-             (evil-ex-define-cmd "q[uit]" 'kill-buffer-and-window)
+             (evil-ex-define-cmd "q" 'kill-buffer-and-window)
              (evil-ex-define-cmd "wq" 'my/ex-save-kill-buffer-and-close)
+             (evil-ex-define-cmd "quit" 'evil-quit)
              (evil-mode 1))
 
 
