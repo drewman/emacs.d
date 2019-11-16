@@ -5,36 +5,28 @@
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 (require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-(defun my/package-installed-p (pkg)
-  "Check if package is installed. In emacs26 package-installed-p
-seems to require package-initialize iff the package is *not*
-installed. This prevents calling package-initialized if all
-packages are already installed which improves startup time."
-  (condition-case nil
-      (package-installed-p pkg)
-    (error
-     (package-initialize)
-     (package-installed-p pkg))))
+(defun my/package-install-refresh-contents (&rest args)
+    (package-refresh-contents)
+    (advice-remove 'package-install 'my/package-install-refresh-contents))
 
-(when (not (my/package-installed-p 'use-package))
-  (package-refresh-contents)
-  (package-install 'use-package))
+(advice-add 'package-install :before 'my/package-install-refresh-contents)
+
+(when (not (package-installed-p 'use-package))
+    (package-install 'use-package))
 
 (eval-when-compile
-  (require 'use-package))
-
-(setq use-package-always-ensure t)
+    (require 'use-package)
+    (setq use-package-always-ensure t))
 
 ;; SECTION -- window settings
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (global-display-line-numbers-mode)
 ;;start emacs maximized
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . maximized)
 
 (setq user-init-file (or load-file-name (buffer-file-name)))
 (setq user-emacs-directory (file-name-directory user-init-file))
@@ -42,14 +34,15 @@ packages are already installed which improves startup time."
 (setq initial-scratch-message ";;C-j evaluate\n;;C-x C-f to save buffer\n\n")
 
 (use-package color-theme-sanityinc-tomorrow)
-(load-theme 'sanityinc-tomorrow-eighties)
+(load-theme 'sanityinc-tomorrow-eighties t)
 
-(use-package diminish)
+(use-package diminish)  ; could try delight instead
+    
 ;; dashboard could use some setup
 (use-package dashboard
   :config
   (dashboard-setup-startup-hook)
-  (setq dashboard-banner-logo-title "Welcome to eViLmacs")
+  (setq dashboard-banner-logo-title "Drew's eViLmacs")
   (setq dashboard-items '((recents  . 15)
                           (bookmarks . 15)
                           (projects . 15)))
@@ -99,7 +92,6 @@ packages are already installed which improves startup time."
   :after markdown-mode)
 
 ;; SECTION -- Completion
-;; TODO: consider switching to helm
 (use-package ivy
              :config
              (ivy-mode 1)
@@ -160,6 +152,14 @@ packages are already installed which improves startup time."
     :config
     (require 'smartparens-config)
     (smartparens-global-mode 1))
+
+;; SECTION -- DEV
+
+(use-package groovy-mode
+    :config
+    (setq groovy-indent-offset 4))
+
+(use-package clojure-mode)
 
 ;; SECTION -- EVIL
 ;;                             ,-.
