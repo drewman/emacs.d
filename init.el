@@ -26,7 +26,7 @@
 (scroll-bar-mode -1)
 (global-display-line-numbers-mode)
 ;;start emacs maximized
-(add-to-list 'default-frame-alist '(fullscreen . maximized)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (setq user-init-file (or load-file-name (buffer-file-name)))
 (setq user-emacs-directory (file-name-directory user-init-file))
