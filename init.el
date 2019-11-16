@@ -44,10 +44,18 @@ packages are already installed which improves startup time."
 (use-package color-theme-sanityinc-tomorrow)
 (load-theme 'sanityinc-tomorrow-eighties)
 
+(use-package diminish)
 ;; dashboard could use some setup
 (use-package dashboard
   :config
   (dashboard-setup-startup-hook)
+  (setq dashboard-banner-logo-title "Welcome to eViLmacs")
+  (setq dashboard-items '((recents  . 15)
+                          (bookmarks . 15)
+                          (projects . 15)))
+  (setq dashboard-show-shortcuts nil)
+  (setq dashboard-set-init-info t)
+  (setq dashboard-set-navigator t)
   (setq dashboard-startup-banner 'logo))
 
 ;; SECTION -- files
@@ -104,12 +112,18 @@ packages are already installed which improves startup time."
 (use-package counsel
              :after ivy)
 
+(use-package ivy-rich
+  :after ivy
+  :config
+  (ivy-rich-mode 1))
+
 (use-package company
    :init (global-company-mode)
    :config
    (setq company-dabbrev-downcase nil))
 
 (use-package which-key
+             :diminish
              :config
              (which-key-mode))
 
@@ -130,6 +144,7 @@ packages are already installed which improves startup time."
 (setq indent-line-function 'insert-tab)
 
 (use-package indent-guide
+  :diminish
   :config
   (set-face-background 'indent-guide-face "red")
   (indent-guide-global-mode))
@@ -141,6 +156,7 @@ packages are already installed which improves startup time."
   (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode))
 
 (use-package smartparens
+    :diminish
     :config
     (require 'smartparens-config)
     (smartparens-global-mode 1))
@@ -171,12 +187,18 @@ packages are already installed which improves startup time."
 )
 
 (use-package evil
+             :init
+             (setq evil-want-keybinding nil)
              :config
              (evil-ex-define-cmd "q" 'kill-buffer-and-window)
              (evil-ex-define-cmd "wq" 'my/ex-save-kill-buffer-and-close)
              (evil-ex-define-cmd "quit" 'evil-quit)
              (evil-mode 1))
 
+(use-package evil-collection
+  :after evil
+  :custom (evil-collection-setup-minibuffer t)
+  :init (evil-collection-init))
 
 ;; SECTION -- project management
 (use-package neotree
@@ -197,6 +219,10 @@ packages are already installed which improves startup time."
   :config
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (projectile-mode +1))
+
+(use-package counsel-projectile
+    :after (counsel projectile)
+    :init (counsel-projectile-mode))
 
 ;; SECTION -- ORG MODE
 (use-package org
@@ -226,12 +252,13 @@ packages are already installed which improves startup time."
   :states 'normal
   "f" 'counsel-find-file
   "x" 'counsel-M-x
-  "p" 'projectile-mode-map
+  "p" 'projectile-command-map
 
   ;; bookmark shortcuts
   "b" '(nil :wk "bookmarks")
   "b m" 'bookmark-set
   "b b" 'bookmark-jump
+  "b d" 'counsel-bookmarked-directory
   "b l" '((lambda () (interactive) (call-interactively 'bookmark-bmenu-list)) :wk "list bookmarks")
 
   ;; buffer shortcuts
