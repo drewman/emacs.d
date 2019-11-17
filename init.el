@@ -1,3 +1,58 @@
+ ;;; init.el --- Drew's emacs config
+ ;;; Commentary:
+ ;;; Code:
+
+;; optimizations to speed up start-up time (per John Wiegley)
+(defvar file-name-handler-alist-old file-name-handler-alist)
+
+(setq package-enable-at-startup nil
+      file-name-handler-alist nil
+      message-log-max 16384
+      gc-cons-threshold 402653184
+      gc-cons-percentage 0.6
+      auto-window-vscroll nil)
+
+;; SECTION -- files
+
+;; use emacs-local for environment specific resources
+(setq user-init-file (or load-file-name (buffer-file-name)))
+(setq user-emacs-directory (file-name-directory user-init-file))
+
+(defvar my/emacs-local-resources (expand-file-name "emacs-local" (getenv "HOME")))
+(unless (file-directory-p my/emacs-local-resources)
+  (make-directory my/emacs-local-resources))
+
+;; put packages in separate repo
+(setq package-user-dir (expand-file-name "elpa" my/emacs-local-resources))
+(unless (file-directory-p package-user-dir)
+  (make-directory package-user-dir))
+
+;; Keep emacs "custom" settings in separate file and load it
+;; TODO: probably want to keep under source control
+(setq custom-file (expand-file-name "custom-file.el" my/emacs-local-resources))
+(unless (file-exists-p custom-file)
+  (write-region "" nil custom-file))
+(load custom-file)
+
+;https://emacsredux.com/blog/2013/05/09/keep-backup-and-auto-save-files-out-of-the-way/
+;; store all backup and autosave files in specified backups directory
+(defvar my/backup-directory (expand-file-name "backups" my/emacs-local-resources))
+(unless (file-directory-p my/backup-directory)
+  (make-directory my/backup-directory))
+
+(setq recentf-save-file (expand-file-name "recentf" my/emacs-local-resources))
+(setq eshell-history-file-name (expand-file-name "eshell-history" my/emacs-local-resources))
+(setq auto-save-list-file-name (expand-file-name "auto-save-list" my/backup-directory))
+
+(setq backup-directory-alist
+      `((".*" . ,my/backup-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,my/backup-directory t)))
+
+;; add local binaries to path
+(add-to-list 'exec-path "~/bin")
+;; TODO: do I need to add /usr/local/bin for brew?
+;; maybe use exec-path-from-shell
 
 ;; SECTION -- packaging
 ;; Added by Package.el.  This must come before configurations of
@@ -31,10 +86,6 @@
 ;;start emacs maximized
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-(setq user-init-file (or load-file-name (buffer-file-name)))
-(setq user-emacs-directory (file-name-directory user-init-file))
-(add-to-list 'exec-path "~/bin")
-
 (setq initial-scratch-message ";;C-j evaluate\n;;C-x C-f to save buffer\n\n")
 
 (use-package color-theme-sanityinc-tomorrow)
@@ -53,22 +104,7 @@
   (setq dashboard-show-shortcuts nil)
   (setq dashboard-set-init-info t)
   (setq dashboard-set-navigator t)
-  (setq dashboard-startup-banner 'logo))
-
-;; SECTION -- files
-;;https://emacsredux.com/blog/2013/05/09/keep-backup-and-auto-save-files-out-of-the-way/
-;; store all backup and autosave files in the tmp dir
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
-
-;; Keep emacs "custom" settings in separate file and load it
-(setq custom-file (expand-file-name "custom-file.el" user-emacs-directory))
-(unless (file-exists-p custom-file)
-  (write-region "" nil custom-file))
-(load custom-file)
-
+  (setq dashboard-startup-banner 4))
 ;; SECTION -- terminal
 ;;get default shell
 (defvar my/osx-brew-zsh "/usr/local/bin/zsh")
@@ -226,7 +262,10 @@
 (use-package projectile
   :config
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (projectile-mode +1))
+  (projectile-mode +1)
+  :init
+  (setq projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" my/emacs-local-resources))
+  (setq projectile-completion-system 'ivy))
 
 (use-package counsel-projectile
     :after (counsel projectile)
@@ -308,3 +347,9 @@
     "C-," 'er/expand-region
     "C-c TAB" 'company-complete)
 
+(general-define-key
+    :states 'normal
+    "/" 'swiper)
+
+(provide 'init)
+;;; init.el ends here
