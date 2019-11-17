@@ -8,6 +8,9 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
+;; Don't load stale byte-compiled files
+(setq load-prefer-newer t)
+
 (defun my/package-install-refresh-contents (&rest args)
     (package-refresh-contents)
     (advice-remove 'package-install 'my/package-install-refresh-contents))
