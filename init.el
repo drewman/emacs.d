@@ -30,6 +30,7 @@
 
 (setq user-init-file (or load-file-name (buffer-file-name)))
 (setq user-emacs-directory (file-name-directory user-init-file))
+(add-to-list 'exec-path "~/bin")
 
 (setq initial-scratch-message ";;C-j evaluate\n;;C-x C-f to save buffer\n\n")
 
@@ -145,6 +146,7 @@
   :config
   (add-hook 'groovy-mode-hook #'rainbow-delimiters-mode)
   (add-hook 'python-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
   (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode))
 
 (use-package smartparens
@@ -153,6 +155,8 @@
     (require 'smartparens-config)
     (smartparens-global-mode 1))
 
+(use-package expand-region)
+
 ;; SECTION -- DEV
 
 (use-package groovy-mode
@@ -160,6 +164,7 @@
     (setq groovy-indent-offset 4))
 
 (use-package clojure-mode)
+;;(use-package cider)
 
 ;; SECTION -- EVIL
 ;;                             ,-.
@@ -296,6 +301,7 @@
     "C-s" 'save-buffer)
 
 (general-define-key
-    :states 'normal
+    :states '(normal insert visual)
+    "C-," 'er/expand-region
     "C-c TAB" 'company-complete)
 
