@@ -28,8 +28,7 @@
   (make-directory package-user-dir))
 
 ;; Keep emacs "custom" settings in separate file and load it
-;; TODO: probably want to keep under source control
-(setq custom-file (expand-file-name "custom-file.el" my/emacs-local-resources))
+(setq custom-file (expand-file-name "custom-file.el" user-emacs-directory))
 (unless (file-exists-p custom-file)
   (write-region "" nil custom-file))
 (load custom-file)
