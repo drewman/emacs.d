@@ -40,6 +40,7 @@
   (make-directory my/backup-directory))
 
 (setq recentf-save-file (expand-file-name "recentf" my/emacs-local-resources))
+;; still creating eshell directory TODO: find a way to move this as well
 (setq eshell-history-file-name (expand-file-name "eshell-history" my/emacs-local-resources))
 (setq auto-save-list-file-name (expand-file-name "auto-save-list" my/backup-directory))
 
@@ -94,6 +95,7 @@
     
 ;; dashboard could use some setup
 (use-package dashboard
+  :load-path "elisp/dashboard"
   :config
   (dashboard-setup-startup-hook)
   (setq dashboard-banner-logo-title "Drew's eViLmacs")
