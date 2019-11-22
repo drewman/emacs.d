@@ -233,19 +233,19 @@
 ;;             \   \__, \_     `~'     _/ .__/   /
 ;;              `-._,-'   `-._______,-'   `-._,-'
 
-(defun my/ex-save-kill-buffer-and-close ()
+(defun my/save-and-kill-buffer ()
     (interactive)
     (save-buffer)
-    (kill-buffer-and-window)
+    (kill-current-buffer)
 )
 
 (use-package evil
              :init
              (setq evil-want-keybinding nil)
              :config
-             (evil-ex-define-cmd "q" 'kill-buffer-and-window)
-             (evil-ex-define-cmd "wq" 'my/ex-save-kill-buffer-and-close)
-             (evil-ex-define-cmd "quit" 'evil-quit)
+             (evil-ex-define-cmd "q" 'kill-current-buffer)
+             (evil-ex-define-cmd "wq" 'my/save-and-kill-buffer)
+             (evil-ex-define-cmd "quit" 'evil-save-and-quit)
              (evil-mode 1))
 
 (use-package evil-collection
@@ -345,7 +345,7 @@
  "C-c u" 'uncomment-region)
 
 (general-define-key
-    :states '(visual normal)
+    :states '(visual normal insert)
     ;; so i stop spamming search ;)
     "C-s" 'save-buffer)
 
