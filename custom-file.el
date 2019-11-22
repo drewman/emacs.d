@@ -20,7 +20,10 @@
  '(frame-background-mode (quote dark))
  '(package-selected-packages
    (quote
-    (company counsel multi-term diminish cider inf-clojure expand-region helm use-package clojure-mode counsel-projectile evil-collection smartparens rainbow-delimiters indent-guide ivy-rich gh-md markdown-mode org-bullets evil-org company-mode projectile flycheck-pos-tip flycheck powerline-evil dashboard magit yaml-mode general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
+    (virtualenvwrapper eshell-prompt-extras shell-pop org-plus-contrb org-plus-contrib org-contrib exec-path-from-shell magit-evil evil-magit page-break-lines company counsel multi-term diminish cider inf-clojure expand-region helm use-package clojure-mode counsel-projectile evil-collection smartparens rainbow-delimiters indent-guide ivy-rich gh-md markdown-mode org-bullets evil-org company-mode projectile flycheck-pos-tip flycheck powerline-evil dashboard magit yaml-mode general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
+ '(shell-pop-full-span t)
+ '(shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell)))))
+ '(shell-pop-window-size 50)
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
    (quote
