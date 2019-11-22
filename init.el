@@ -209,6 +209,11 @@
 (use-package clojure-mode)
 ;;(use-package cider)
 
+(use-package magit)
+(use-package evil-magit
+    :after magit
+    :after evil)
+
 ;; SECTION -- EVIL
 ;;                             ,-.
 ;;        ___,---.__          /'|`\          __,---,___
