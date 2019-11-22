@@ -48,9 +48,10 @@
       `((".*" . ,my/backup-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,my/backup-directory t)))
+(setq auto-save-visited-model t)
 
 ;; add local binaries to path
-(add-to-list 'exec-path "~/bin")
+;;(add-to-list 'exec-path "~/bin")
 ;; TODO: do I need to add /usr/local/bin for brew?
 ;; maybe use exec-path-from-shell
 
@@ -80,6 +81,9 @@
     (require 'use-package)
     (setq use-package-always-ensure t))
 
+(use-package exec-path-from-shell
+    :init
+    (exec-path-from-shell-initialize))
 ;; SECTION -- window settings
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -107,22 +111,19 @@
   (setq dashboard-set-init-info t)
   (setq dashboard-set-navigator t)
   (setq dashboard-startup-banner 4))
-;; SECTION -- terminal
-;;get default shell
-(defvar my/osx-brew-zsh "/usr/local/bin/zsh")
-(defvar my/default-zsh "/bin/zsh")
-(defvar my/default-bash "/bin/bash")
-(defvar my/default-shell
-      (if (file-exists-p my/osx-brew-zsh)
-          my/osx-brew-zsh
-        (if (file-exists-p my/default-zsh)
-            my/default-zsh
-          my/default-bash)))
 
-(use-package multi-term
-    :config
-    (setq multi-term-program my/default-shell)
-    (setq multi-term-dedicated-select-after-open-p t))
+;; SECTION -- terminal
+;; TL;DR -- simple eshell
+(use-package shell-pop)
+
+(use-package eshell-prompt-extras
+    :init
+    (use-package virtualenvwrapper)
+    (venv-initialize-eshell)
+    (with-eval-after-load "esh-opt"
+    (autoload 'epe-theme-lambda "eshell-prompt-extras")
+    (setq eshell-highlight-prompt nil
+            eshell-prompt-function 'epe-theme-lambda)))
 
 ;; SECTION -- coding modes
 (use-package markdown-mode
@@ -328,11 +329,7 @@
   "s u" '(evil-scroll-up :wk "scroll up")
 
   ;; terminal
-  "t" '(nil :wk "terminal")
-  "t o" '(multi-term :wk "open terminal")
-  "t t" '(multi-term-dedicated-toggle :wk "mini-term toggle")
-  "t n" '(multi-term-next :wk "next terminal")
-  "t p" '(multi-term-prev :wk "prev terminal"))
+  "t" '(shell-pop :wk "terminal"))
 
 ;; Bind these to control for use in visual-mode
 (general-define-key
