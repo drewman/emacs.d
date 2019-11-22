@@ -61,6 +61,7 @@
 ;; You may delete these explanatory comments.
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
 
 ;; Don't load stale byte-compiled files
@@ -274,7 +275,9 @@
 
 ;; SECTION -- ORG MODE
 (use-package org
+  :ensure org-plus-contrib
   :config
+  (require 'ox-confluence)
   (setq org-log-done t))
 
 (use-package evil-org
