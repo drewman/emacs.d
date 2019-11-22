@@ -99,8 +99,9 @@
 (use-package diminish)  ; could try delight instead
     
 ;; dashboard could use some setup
+(defvar dashboard-dir (expand-file-name "elisp/dashboard" user-emacs-directory))
 (use-package dashboard
-  :load-path "elisp/dashboard"
+  :load-path dashboard-dir
   :config
   (dashboard-setup-startup-hook)
   (setq dashboard-banner-logo-title "Drew's eViLmacs")
