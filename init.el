@@ -113,6 +113,8 @@
   (setq dashboard-set-navigator t)
   (setq dashboard-startup-banner 4))
 
+(use-package restart-emacs)
+
 ;; SECTION -- terminal
 ;; TL;DR -- simple eshell
 (use-package shell-pop)
@@ -146,7 +148,10 @@
                    '((t . ivy--regex-fuzzy))))
 
 (use-package counsel
-             :after ivy)
+  :after ivy)
+
+(use-package flx
+  :after ivy)
 
 (use-package ivy-rich
   :after ivy
@@ -154,9 +159,14 @@
   (ivy-rich-mode 1))
 
 (use-package company
-   :init (global-company-mode)
    :config
-   (setq company-dabbrev-downcase nil))
+   (setq company-dabbrev-downcase nil)
+
+   (use-package company-quickhelp
+        :config
+        (company-quickhelp-mode)))
+
+(add-hook 'after-init-hook 'global-company-mode)
 
 (use-package which-key
              :diminish
@@ -209,10 +219,31 @@
 (use-package clojure-mode)
 ;;(use-package cider)
 
+(use-package lsp-mode
+  :after company
+  :hook
+  (python-mode . lsp)
+  (groovy-mode . lsp)
+  :commands lsp)
+
+(defvar lsp-language-id-configuration
+  '((groovy-mode . "groovy")
+    (python-mode . "python")))
+
+(use-package company-lsp
+    :after lsp-mode
+    :init
+    (push 'company-lsp company-backends))
+
 (use-package magit)
 (use-package evil-magit
     :after magit
     :after evil)
+
+(use-package yasnippet
+    :config
+    (yas-global-mode 1)
+    (use-package yasnippet-snippets))
 
 ;; SECTION -- EVIL
 ;;                             ,-.

@@ -18,9 +18,12 @@
  '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
  '(flycheck-pos-tip-mode t)
  '(frame-background-mode (quote dark))
+ '(org-agenda-files
+   (quote
+    ("~/box-sync/Box Sync/org (Drew.Bruce@nike.com)/nike-work-notes.org" "~/org/personal-todos.org" "~/org/emacs-todo.org")))
  '(package-selected-packages
    (quote
-    (virtualenvwrapper eshell-prompt-extras shell-pop org-plus-contrb org-plus-contrib org-contrib exec-path-from-shell magit-evil evil-magit page-break-lines company counsel multi-term diminish cider inf-clojure expand-region helm use-package clojure-mode counsel-projectile evil-collection smartparens rainbow-delimiters indent-guide ivy-rich gh-md markdown-mode org-bullets evil-org company-mode projectile flycheck-pos-tip flycheck powerline-evil dashboard magit yaml-mode general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
+    (restart-emacs lsp-java company-lsp yasnippet-snippets yassnippet lsp-mode company-quickhelp flx virtualenvwrapper eshell-prompt-extras shell-pop org-plus-contrb org-plus-contrib org-contrib exec-path-from-shell magit-evil evil-magit page-break-lines company counsel multi-term diminish cider inf-clojure expand-region helm use-package clojure-mode counsel-projectile evil-collection smartparens rainbow-delimiters indent-guide ivy-rich gh-md markdown-mode org-bullets evil-org company-mode projectile flycheck-pos-tip flycheck powerline-evil dashboard magit yaml-mode general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
  '(shell-pop-full-span t)
  '(shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell)))))
  '(shell-pop-window-size 50)
