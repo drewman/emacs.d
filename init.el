@@ -246,21 +246,18 @@
 (use-package indent-guide
   :diminish
   :config
-  (set-face-background 'indent-guide-face "red")
-  (indent-guide-global-mode))
+  (set-face-background 'indent-guide-face "white")
+  :hook ((python-mode groovy-mode clojure-mode emacs-lisp-mode) . indent-guide-mode))
 
 (use-package rainbow-delimiters
   :config
-  (add-hook 'groovy-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'python-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode))
+  :hook ((groovy-mode python-mode clojure-mode emacs-lisp-mode) . rainbow-delimiters-mode))
 
 (use-package smartparens
     :diminish
     :config
     (require 'smartparens-config)
-    (smartparens-global-mode 1))
+    :hook (emacs-lisp-mode . smartparens-mode))
 
 (use-package expand-region)
 
