@@ -80,10 +80,19 @@
 (eval-when-compile
     (require 'use-package)
     (setq use-package-always-ensure t))
+;;    (setq use-package-always-defer t))
+
+(use-package benchmark-init
+  :disabled
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 (use-package exec-path-from-shell
     :init
+    (exec-path-from-shell-copy-env "WORKON_HOME")
     (exec-path-from-shell-initialize))
+
 ;; SECTION -- window settings
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
