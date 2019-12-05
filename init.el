@@ -196,20 +196,26 @@
   :config
   (ivy-rich-mode 1))
 
+(use-package flyspell)
+
 (use-package company
-   :config
+   :diminish
+   :init
+   (global-company-mode 1)
    (setq company-dabbrev-downcase nil)
 
    (use-package company-quickhelp
         :config
         (company-quickhelp-mode)))
 
+
 (add-hook 'after-init-hook 'global-company-mode)
 
 (use-package which-key
              :diminish
              :config
-             (which-key-mode))
+             (which-key-mode)
+             (setq which-key-sort-order 'which-key-description-order))
 
 (use-package flycheck
   :init (global-flycheck-mode))
