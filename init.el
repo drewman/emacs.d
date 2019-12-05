@@ -329,20 +329,16 @@
     (save-buffer)
     (kill-current-buffer)
 )
-
+ 
 (use-package evil
-             :init
-             (setq evil-want-keybinding nil)
-             :config
-             (evil-ex-define-cmd "q" 'kill-current-buffer)
-             (evil-ex-define-cmd "wq" 'my/save-and-kill-buffer)
-             (evil-ex-define-cmd "quit" 'evil-save-and-quit)
-             (evil-mode 1))
-
-(use-package evil-collection
-  :after evil
-  :custom (evil-collection-setup-minibuffer t)
-  :init (evil-collection-init))
+    ;;:defer 5
+    :init
+    (setq evil-want-keybinding nil)
+    :config
+    (evil-ex-define-cmd "q" 'kill-current-buffer)
+    (evil-ex-define-cmd "wq" 'my/save-and-kill-buffer)
+    (evil-ex-define-cmd "quit" 'evil-save-and-quit)
+    (evil-mode 1))
 
 ;; SECTION -- project management
 (use-package neotree
