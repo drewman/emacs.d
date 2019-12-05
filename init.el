@@ -178,11 +178,14 @@
              (ivy-mode 1)
              (setq ivy-use-virtual-buffers t)
              (setq ivy-count-format "(%d/%d) ")
-             ;;FUZZY SEARCHING EVERYWHERE :DDD
+             ;;FUZZY SEARCHING EVERYWHERE (except swiper):DDD
              (setq ivy-re-builders-alist
-                   '((t . ivy--regex-fuzzy))))
+                   '((swiper-isearch . ivy--regex-plus)
+                     (t . ivy--regex-fuzzy))))
 
 (use-package counsel
+  :config
+  (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
   :after ivy)
 
 (use-package flx
