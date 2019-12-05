@@ -354,78 +354,108 @@
   :ensure org-plus-contrib
   :config
   (require 'ox-confluence)
-  (setq org-log-done t))
+  (require 'ox-beamer)
+  (setq org-log-done t)
 
-(use-package evil-org
-  :after org
   :config
+  (use-package org-bullets)
+  (use-package org-present)
   (add-hook 'org-mode-hook 'evil-org-mode)
   (add-hook 'evil-org-mode-hook
             (lambda ()
               (evil-org-set-key-theme)))
   (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+  (evil-org-agenda-set-keys)
+  (setq org-present-text-scale 4)
+  (add-hook 'org-mode-hook 'org-bullets-mode)
+  (add-hook 'org-mode-hook 'org-bullets-mode))
 
-(use-package org-bullets
-    :config
-    (add-hook 'org-mode-hook 'org-bullets-mode))
 
-;; SECTION -- general keybindings
+(eval-after-load "org-present"
+  '(progn
+     (add-hook 'org-present-mode-hook
+               (lambda ()
+                 (org-present-big)
+                 (org-display-inline-images)
+                 (org-present-hide-cursor)
+                 (org-present-read-only)))
+     (add-hook 'org-present-mode-quit-hook
+               (lambda ()
+                 (org-present-small)
+                 (org-remove-inline-images)
+                 (org-present-show-cursor)
+                 (org-present-read-write)))))
+
+(setq org-agenda-custom-commands
+      '(("h" "Agenda and Home-related tasks"
+            ((agenda "")
+             (todo ""))
+             ((org-agenda-files '("~/org/personal-notes.org"))))
+        ("w" "Work Agenda and Tasks"
+            ((agenda "")
+             (todo ""))
+            ((org-agenda-files '("~/org/nike-work-notes.org"))))))
+
+(setq org-default-notes-file (concat org-directory "/inbox.org"))
+(setq org-refile-targets '(("~/org/nike-work-notes.org" :maxlevel . 1)
+                           ("~/org/personal-notes.org" :maxlevel . 1)
+                           ("~/org/emacs-notes.org" :maxlevel . 1)
+                           (nil :maxlevel . 9)))
+
+;; SECTION -- keybindings
 ;; SPACEMACS-like keybinding
-;; TODO: look into moving to evil-leader (general.el feels like a bit much)
-(use-package general)
-(general-define-key
-  :prefix "SPC"
-  :states 'normal
-  "f" 'counsel-find-file
-  "x" 'counsel-M-x
-  "p" 'projectile-command-map
+(defvar my/leader-map
+  (make-sparse-keymap)
+  "Keymap for 'leader' keys.")
 
-  ;; bookmark shortcuts
-  "b" '(nil :wk "bookmarks")
-  "b m" 'bookmark-set
-  "b b" 'bookmark-jump
-  "b d" 'counsel-bookmarked-directory
-  "b l" '((lambda () (interactive) (call-interactively 'bookmark-bmenu-list)) :wk "list bookmarks")
+(evil-define-key 'normal global-map (kbd "SPC") my/leader-map)
+(evil-define-key 'insert global-map (kbd "C-<SPC>") my/leader-map)
+(evil-define-key 'visual global-map (kbd "C-<SPC>")my/leader-map)
 
-  ;; buffer shortcuts
-  "u" '(nil :wk "buffer")
-  "u k" 'kill-buffer
-  "u c" 'kill-current-buffer
-  "u e" 'eval-buffer
-  "u l" 'list-buffers
-  "u u" 'switch-to-buffer
-  
-  ;; scrolling shortcuts
-  "s" '(nil :wk "scroll")
-  "s f" '(evil-scroll-page-down :wk "page-down")
-  "s b" '(evil-scroll-page-up :wk "page-up")
-  "s d" '(evil-scroll-down :wk "scroll down")
-  "s u" '(evil-scroll-up :wk "scroll up")
+(define-key my/leader-map "f" 'counsel-find-file)
+(define-key my/leader-map "x" 'counsel-M-x)
+(define-key my/leader-map "p" 'projectile-command-map)
+(define-key my/leader-map "m" 'bookmark-set)
+(define-key my/leader-map "b" 'bookmark-jump)
+(define-key my/leader-map "d" 'counsel-bookmarked-directory)
+(define-key my/leader-map "k" 'kill-buffer)
+(define-key my/leader-map "c" 'kill-current-buffer)
+(define-key my/leader-map "e" 'eval-buffer)
+(define-key my/leader-map "l" 'list-buffers)
+(define-key my/leader-map "u" 'ivy-switch-buffer)
+(define-key my/leader-map "w" 'widen)
 
-  ;; terminal
-  "t" '(shell-pop :wk "terminal"))
+(define-key my/leader-map "oa" 'org-agenda)
+(define-key my/leader-map "ol" 'org-store-link)
+(define-key my/leader-map "or" 'org-refile)
+(define-key my/leader-map "oe" '(lambda () (interactive) (find-file "~/org/emacs-notes.org")))
+(define-key my/leader-map "op" '(lambda () (interactive) (find-file "~/org/personal-notes.org")))
+(define-key my/leader-map "ow" '(lambda () (interactive) (find-file "~/org/nike-work-notes.org")))
+(define-key my/leader-map "oi" '(lambda () (interactive) (find-file "~/org/inbox.org")))
 
-;; Bind these to control for use in visual-mode
-(general-define-key
- :states 'visual
- ;;comments
- "C-c c" 'comment-region
- "C-c u" 'uncomment-region)
+(which-key-add-key-based-replacements "<SPC> o" "org-prefix")
+(which-key-add-key-based-replacements "<SPC> oe" "emacs notes")
+(which-key-add-key-based-replacements "<SPC> op" "personal notes")
+(which-key-add-key-based-replacements "<SPC> ow" "work notes")
+(which-key-add-key-based-replacements "<SPC> oi" "inbox")
 
-(general-define-key
-    :states '(visual normal insert)
-    ;; so i stop spamming search ;)
-    "C-s" 'save-buffer)
+(define-key my/leader-map "D" 'counsel-descbinds)
 
-(general-define-key
-    :states '(normal insert visual)
-    "C-," 'er/expand-region
-    "C-c TAB" 'company-complete)
+(define-key my/leader-map "yn" 'yas-new-snippet)
+(define-key my/leader-map "ye" 'yas-expand)
 
-(general-define-key
-    :states 'normal
-    "/" 'swiper)
+(which-key-add-key-based-replacements "<SPC> y" "yas-prefix")
 
-(provide 'init)
+(define-key my/leader-map "t" 'shell-pop)
+
+;;(evil-global-set-key 'motion "C-," 'er/expand-region)
+(evil-global-set-key 'normal "/" 'swiper-isearch)
+(evil-global-set-key 'visual (kbd "C-c c") 'comment-region)
+(evil-global-set-key 'visual (kbd "C-c u") 'uncomment-region)
+
+(evil-define-minor-mode-key 'normal 'org-present-mode (kbd "n") 'org-present-next)
+(evil-define-minor-mode-key 'normal 'org-present-mode (kbd "p") 'org-present-prev)
+(evil-define-minor-mode-key 'normal 'org-present-mode (kbd "q") 'org-present-quit)
+
+(provide 'init.el)
 ;;; init.el ends here
