@@ -254,29 +254,35 @@
     :config
     (setq groovy-indent-offset 4))
 
+(use-package anaconda-mode
+  :config
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  (use-package company-anaconda))
+
+(eval-after-load "company"
+ '(add-to-list 'company-backends 'company-anaconda))
+
 (use-package clojure-mode)
 ;;(use-package cider)
 
 (use-package lsp-mode
   :after company
   :hook
-  (python-mode . lsp)
-  (groovy-mode . lsp)
+  ;; (python-mode . lsp-deferred)
+  (groovy-mode . lsp-deferred)
   :commands lsp)
 
 (defvar lsp-language-id-configuration
-  '((groovy-mode . "groovy")
-    (python-mode . "python")))
+  '((groovy-mode . "groovy")))
+    ;; (python-mode . "python")))
 
 (use-package company-lsp
     :after lsp-mode
     :init
     (push 'company-lsp company-backends))
 
-(use-package magit)
-(use-package evil-magit
-    :after magit
-    :after evil)
+(use-package magit
+    :defer 5)
 
 (use-package yasnippet
     :config
