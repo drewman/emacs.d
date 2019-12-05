@@ -93,11 +93,46 @@
 
 (setq initial-scratch-message ";;C-j evaluate\n;;C-x C-f to save buffer\n\n")
 
-(use-package color-theme-sanityinc-tomorrow)
-(load-theme 'sanityinc-tomorrow-eighties t)
+;; (use-package color-theme-sanityinc-tomorrow)
+;; (load-theme 'sanityinc-tomorrow-eighties t)
 
 (use-package diminish)  ; could try delight instead
-    
+
+(use-package golden-ratio
+    :diminish
+    :init (golden-ratio-mode 1))
+
+;; (use-package spaceline
+;;   :init
+;;   (use-package fancy-battery
+;;     :init (fancy-battery-mode))
+;;   (use-package spaceline-all-the-icons
+;;     :after fancy-battery
+;;     :config
+;;     (spaceline-all-the-icons-theme)
+;;     (spaceline-all-the-icons--setup-git-ahead)
+;;     (spaceline-all-the-icons--setup-package-updates)
+;;     (spaceline-toggle-all-the-icons-narrowed-on)
+;;     (spaceline-toggle-all-the-icons-battery-status-on)
+;;     (spaceline-toggle-all-the-icons-buffer-position-on)))
+
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode))
+
+(use-package doom-themes
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;; (load-theme 'doom-city-lights t)
+  (load-theme 'doom-Iosvkem t)
+  
+  ;; Enable custom neotree theme (all-the-icons must be installed!)
+  (doom-themes-neotree-config)
+  
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+
 ;; dashboard could use some setup
 (defvar dashboard-dir (expand-file-name "elisp/dashboard" user-emacs-directory))
 (use-package dashboard
