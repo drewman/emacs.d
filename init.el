@@ -164,6 +164,7 @@
 (use-package shell-pop)
 
 (use-package eshell-prompt-extras
+    :defer 10
     :init
     (use-package virtualenvwrapper)
     (venv-initialize-eshell)
