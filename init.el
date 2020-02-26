@@ -4,7 +4,6 @@
 
 ;; optimizations to speed up start-up time (per John Wiegley)
 (defvar file-name-handler-alist-old file-name-handler-alist)
-
 (setq package-enable-at-startup nil
       file-name-handler-alist nil
       message-log-max 16384
@@ -65,9 +64,6 @@
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
 
-;; Don't load stale byte-compiled files
-(setq load-prefer-newer t)
-
 (defun my/package-install-refresh-contents (&rest args)
     (package-refresh-contents)
     (advice-remove 'package-install 'my/package-install-refresh-contents))
@@ -80,7 +76,6 @@
 (eval-when-compile
     (require 'use-package)
     (setq use-package-always-ensure t))
-;;    (setq use-package-always-defer t))
 
 (use-package benchmark-init
   :disabled
@@ -107,32 +102,18 @@
 
 (use-package diminish)  ; could try delight instead
 
-(use-package golden-ratio
-    :diminish
-    :init (golden-ratio-mode 1))
-
-;; (use-package spaceline
-;;   :init
-;;   (use-package fancy-battery
-;;     :init (fancy-battery-mode))
-;;   (use-package spaceline-all-the-icons
-;;     :after fancy-battery
-;;     :config
-;;     (spaceline-all-the-icons-theme)
-;;     (spaceline-all-the-icons--setup-git-ahead)
-;;     (spaceline-all-the-icons--setup-package-updates)
-;;     (spaceline-toggle-all-the-icons-narrowed-on)
-;;     (spaceline-toggle-all-the-icons-battery-status-on)
-;;     (spaceline-toggle-all-the-icons-buffer-position-on)))
-
 (use-package doom-modeline
-  :hook (after-init . doom-modeline-mode))
+  :hook (after-init . doom-modeline-mode)
+  :config
+  (setq doom-modeline-project-detection 'project)
+  (setq doom-modeline-vcs-max-length 40)
+  (setq doom-modeline-indent-info t))
 
 (use-package doom-themes
   :config
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled11d840511d8405
   ;; (load-theme 'doom-city-lights t)
   (load-theme 'doom-Iosvkem t)
   
@@ -158,6 +139,25 @@
   (setq dashboard-startup-banner 4))
 
 (use-package restart-emacs)
+
+;; turn off bell
+(setq ring-bell-function 'ignore)
+
+(use-package ranger
+  :config
+  (setq ranger-show-hidden t))
+
+(use-package ivy-posframe
+  :after ivy
+  :diminish
+  :config
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center))
+        ivy-posframe-height-alist '((t . 20)))
+  ;; (if (member "Menlo" (font-family-list))
+  ;;     (setq ivy-posframe-parameters '((internal-border-width . 10) (font . "Menlo")))
+  ;;   ivy-posframe-parameters '((internal-border-width . 10)))
+  ;; (setq ivy-posframe-width 70)
+  (ivy-posframe-mode +1))
 
 ;; SECTION -- terminal
 ;; TL;DR -- simple eshell
@@ -225,6 +225,7 @@
              :diminish
              :config
              (which-key-mode)
+             (setq which-key-frame-max-height 20)
              (setq which-key-sort-order 'which-key-description-order))
 
 (use-package flycheck
@@ -295,7 +296,8 @@
     (push 'company-lsp company-backends))
 
 (use-package magit
-    :defer 5)
+  :config
+  (use-package evil-magit))
 
 (use-package yasnippet
     :config
@@ -373,7 +375,9 @@
   (setq org-log-done t)
 
   :config
-  (use-package org-bullets)
+  (use-package org-bullets
+    :config
+    (add-hook 'org-mode-hook 'org-bullets-mode))
   (use-package org-present)
   (add-hook 'org-mode-hook 'evil-org-mode)
   (add-hook 'evil-org-mode-hook
@@ -425,8 +429,9 @@
 
 (evil-define-key 'normal global-map (kbd "SPC") my/leader-map)
 (evil-define-key 'insert global-map (kbd "C-<SPC>") my/leader-map)
-(evil-define-key 'visual global-map (kbd "C-<SPC>")my/leader-map)
+(evil-define-key 'visual global-map (kbd "C-<SPC>") my/leader-map)
 
+(define-key my/leader-map "c" '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 (define-key my/leader-map "f" 'counsel-find-file)
 (define-key my/leader-map "x" 'counsel-M-x)
 (define-key my/leader-map "p" 'projectile-command-map)
@@ -438,17 +443,33 @@
 (define-key my/leader-map "e" 'eval-buffer)
 (define-key my/leader-map "l" 'list-buffers)
 (define-key my/leader-map "u" 'ivy-switch-buffer)
-(define-key my/leader-map "w" 'widen)
+;; (define-key my/leader-map "w" 'widen)
+(define-key my/leader-map "r" 'ranger)
+
+(which-key-add-key-based-replacements "<SPC> g" "magit-prefix")
+(define-key my/leader-map "gs" 'magit-status)
+(define-key my/leader-map "gc" 'magit-clone)
+(define-key my/leader-map "gl" 'magit-log)
+(define-key my/leader-map "gb" 'magit-branch-and-checkout)
 
 (define-key my/leader-map "oa" 'org-agenda)
 (define-key my/leader-map "ol" 'org-store-link)
 (define-key my/leader-map "or" 'org-refile)
+(define-key my/leader-map "ox" 'org-export-dispatch)
+(define-key my/leader-map "oc" 'org-confluence-export-as-confluence)
 (define-key my/leader-map "oe" '(lambda () (interactive) (find-file "~/org/emacs-notes.org")))
 (define-key my/leader-map "op" '(lambda () (interactive) (find-file "~/org/personal-notes.org")))
 (define-key my/leader-map "ow" '(lambda () (interactive) (find-file "~/org/nike-work-notes.org")))
 (define-key my/leader-map "oi" '(lambda () (interactive) (find-file "~/org/inbox.org")))
 
+(define-key my/leader-map "wo" 'other-window)
+(define-key my/leader-map "wv" 'split-window-vertically)
+(define-key my/leader-map "wh" 'split-window-horizontally)
+(define-key my/leader-map "wq" 'delete-window)
+
 (which-key-add-key-based-replacements "<SPC> o" "org-prefix")
+(which-key-add-key-based-replacements "<SPC> w" "window-prefix")
+(which-key-add-key-based-replacements "<SPC> c" "open config")
 (which-key-add-key-based-replacements "<SPC> oe" "emacs notes")
 (which-key-add-key-based-replacements "<SPC> op" "personal notes")
 (which-key-add-key-based-replacements "<SPC> ow" "work notes")
@@ -473,4 +494,5 @@
 (evil-define-minor-mode-key 'normal 'org-present-mode (kbd "q") 'org-present-quit)
 
 (provide 'init.el)
+
 ;;; init.el ends here
