@@ -1,6 +1,6 @@
- ;;; init.el --- Drew's emacs config
- ;;; Commentary:
- ;;; Code:
+;;; init.el --- Drew's emacs config
+;;; Commentary:
+;;; Code:
 
 ;; optimizations to speed up start-up time (per John Wiegley)
 (defvar file-name-handler-alist-old file-name-handler-alist)
@@ -12,6 +12,11 @@
       auto-window-vscroll nil)
 
 ;; SECTION -- files
+
+(defun my/get-fullpath (@file-relative-path)
+  "Helper function to transform @FILE-RELATIVE-PATH to fullpath."
+  (concat (file-name-directory (or load-file-name buffer-file-name)) @file-relative-path)
+  )
 
 ;; use emacs-local for environment specific resources
 (setq user-init-file (or load-file-name (buffer-file-name)))
@@ -102,6 +107,12 @@
 
 (use-package diminish)  ; could try delight instead
 
+;; this doesn't work right with magit :((
+(use-package golden-ratio
+  :diminish
+  :config
+  (golden-ratio-mode 1))
+
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
   :config
@@ -172,15 +183,6 @@
     (autoload 'epe-theme-lambda "eshell-prompt-extras")
     (setq eshell-highlight-prompt nil
             eshell-prompt-function 'epe-theme-lambda)))
-
-;; SECTION -- coding modes
-(use-package markdown-mode
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode)))
-
-(use-package gh-md
-  :after markdown-mode)
 
 ;; SECTION -- Completion
 (use-package ivy
@@ -264,6 +266,14 @@
 
 ;; SECTION -- DEV
 
+(use-package markdown-mode
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode)))
+
+(use-package gh-md
+  :after markdown-mode)
+
 (use-package groovy-mode
     :config
     (setq groovy-indent-offset 4))
@@ -324,35 +334,36 @@
 ;;              `-._,-'   `-._______,-'   `-._,-'
 
 (defun my/save-and-kill-buffer ()
-    (interactive)
-    (save-buffer)
-    (kill-current-buffer)
+  "Helper function to map to :wq."
+  (interactive)
+  (save-buffer)
+  (kill-current-buffer)
 )
  
 (use-package evil
-    ;;:defer 5
-    :init
-    (setq evil-want-keybinding nil)
-    :config
-    (evil-ex-define-cmd "q" 'kill-current-buffer)
-    (evil-ex-define-cmd "wq" 'my/save-and-kill-buffer)
-    (evil-ex-define-cmd "quit" 'evil-save-and-quit)
-    (evil-mode 1))
+  ;;:defer 5
+  :init
+  (setq evil-want-keybinding nil)
+  :config
+  (evil-ex-define-cmd "q" 'kill-current-buffer)
+  (evil-ex-define-cmd "wq" 'my/save-and-kill-buffer)
+  (evil-ex-define-cmd "quit" 'evil-save-and-quit)
+  (evil-mode 1))
 
 ;; SECTION -- project management
 (use-package neotree
-             :requires evil
-             :config
-             (global-set-key [f8] 'neotree-toggle)
-             (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
-             (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
-             (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
-             (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
-             (evil-define-key 'normal neotree-mode-map (kbd "g") 'neotree-refresh)
-             (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
-             (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
-             (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
-             (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle))
+  :requires evil
+  :config
+  (global-set-key [f8] 'neotree-toggle)
+  (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+  (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+  (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+  (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+  (evil-define-key 'normal neotree-mode-map (kbd "g") 'neotree-refresh)
+  (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
+  (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
+  (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
+  (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle))
 
 (use-package projectile
   :config
@@ -421,77 +432,8 @@
                            ("~/org/emacs-notes.org" :maxlevel . 1)
                            (nil :maxlevel . 9)))
 
-;; SECTION -- keybindings
-;; SPACEMACS-like keybinding
-(defvar my/leader-map
-  (make-sparse-keymap)
-  "Keymap for 'leader' keys.")
-
-(evil-define-key 'normal global-map (kbd "SPC") my/leader-map)
-(evil-define-key 'insert global-map (kbd "C-<SPC>") my/leader-map)
-(evil-define-key 'visual global-map (kbd "C-<SPC>") my/leader-map)
-
-(which-key-add-key-based-replacements "<SPC> c" "open config")
-(define-key my/leader-map "c" '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
-
-(define-key my/leader-map "f" 'counsel-find-file)
-(define-key my/leader-map "x" 'counsel-M-x)
-(define-key my/leader-map "p" 'projectile-command-map)
-(define-key my/leader-map "m" 'bookmark-set)
-(define-key my/leader-map "b" 'bookmark-jump)
-(define-key my/leader-map "d" 'counsel-bookmarked-directory)
-(define-key my/leader-map "k" 'kill-buffer)
-(define-key my/leader-map "c" 'kill-current-buffer)
-(define-key my/leader-map "e" 'eval-buffer)
-(define-key my/leader-map "l" 'list-buffers)
-(define-key my/leader-map "u" 'ivy-switch-buffer)
-;; (define-key my/leader-map "w" 'widen)
-(define-key my/leader-map "r" 'ranger)
-(define-key my/leader-map "t" 'shell-pop)
-(define-key my/leader-map "D" 'counsel-descbinds)
-
-(which-key-add-key-based-replacements "<SPC> g" "magit-prefix")
-(define-key my/leader-map "gs" 'magit-status)
-(define-key my/leader-map "gc" 'magit-clone)
-(define-key my/leader-map "gl" 'magit-log)
-(define-key my/leader-map "gb" 'magit-branch-and-checkout)
-
-(which-key-add-key-based-replacements "<SPC> o" "org-prefix")
-(define-key my/leader-map "oa" 'org-agenda)
-(define-key my/leader-map "ol" 'org-store-link)
-(define-key my/leader-map "or" 'org-refile)
-(define-key my/leader-map "ox" 'org-export-dispatch)
-(define-key my/leader-map "oc" 'org-confluence-export-as-confluence)
-
-(which-key-add-key-based-replacements "<SPC> oe" "emacs notes")
-(define-key my/leader-map "oe" '(lambda () (interactive) (find-file "~/org/emacs-notes.org")))
-
-(which-key-add-key-based-replacements "<SPC> op" "personal notes")
-(define-key my/leader-map "op" '(lambda () (interactive) (find-file "~/org/personal-notes.org")))
-
-(which-key-add-key-based-replacements "<SPC> ow" "work notes")
-(define-key my/leader-map "ow" '(lambda () (interactive) (find-file "~/org/nike-work-notes.org")))
-
-(which-key-add-key-based-replacements "<SPC> oi" "inbox")
-(define-key my/leader-map "oi" '(lambda () (interactive) (find-file "~/org/inbox.org")))
-
-(which-key-add-key-based-replacements "<SPC> w" "window-prefix")
-(define-key my/leader-map "wo" 'other-window)
-(define-key my/leader-map "wv" 'split-window-vertically)
-(define-key my/leader-map "wh" 'split-window-horizontally)
-(define-key my/leader-map "wq" 'delete-window)
-
-(which-key-add-key-based-replacements "<SPC> y" "yas-prefix")
-(define-key my/leader-map "yn" 'yas-new-snippet)
-
-;;(evil-global-set-key 'motion "C-," 'er/expand-region)
-(evil-global-set-key 'normal "/" 'swiper-isearch)
-(evil-global-set-key 'visual (kbd "C-c c") 'comment-region)
-(evil-global-set-key 'visual (kbd "C-c u") 'uncomment-region)
-
-(evil-define-minor-mode-key 'normal 'org-present-mode (kbd "n") 'org-present-next)
-(evil-define-minor-mode-key 'normal 'org-present-mode (kbd "p") 'org-present-prev)
-(evil-define-minor-mode-key 'normal 'org-present-mode (kbd "q") 'org-present-quit)
+;; SECTION -- KEYBINDS
+(load (my/get-fullpath "keybinds.el"))
 
 (provide 'init.el)
 

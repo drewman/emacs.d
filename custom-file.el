@@ -12,18 +12,16 @@
  '(custom-enabled-themes (quote (sanityinc-tomorrow-eighties)))
  '(custom-safe-themes
    (quote
-    ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" default)))
+    ("4639288d273cbd3dc880992e6032f9c817f17c4a91f00f3872009a099f5b3f84" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" default)))
  '(evil-collection-setup-minibuffer t)
  '(fci-rule-color "#373b41")
  '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
  '(flycheck-pos-tip-mode t)
  '(frame-background-mode (quote dark))
- '(org-agenda-files
-   (quote
-    ("~/box-sync/Box Sync/org (Drew.Bruce@nike.com)/nike-work-notes.org" "~/org/personal-todos.org" "~/org/emacs-todo.org")))
+ '(org-agenda-files (quote ("~/org/nike-work-notes.org")))
  '(package-selected-packages
    (quote
-    (restart-emacs lsp-java company-lsp yasnippet-snippets yassnippet lsp-mode company-quickhelp flx virtualenvwrapper eshell-prompt-extras shell-pop org-plus-contrb org-plus-contrib org-contrib exec-path-from-shell magit-evil evil-magit page-break-lines company counsel multi-term diminish cider inf-clojure expand-region helm use-package clojure-mode counsel-projectile evil-collection smartparens rainbow-delimiters indent-guide ivy-rich gh-md markdown-mode org-bullets evil-org company-mode projectile flycheck-pos-tip flycheck powerline-evil dashboard magit yaml-mode general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
+    (golden-ratio ivy-posframe ranger vterm org-bullets doom-modeline smart-mode-line company-anaconda anaconda-mode pyvenv fancy-battery yahoo-weather spaceline-all-the-icons spaceline spaceline-config powerline org-beautify-theme htmlize abbrev flyspell-correct-popup flyspell-correct-ivy evil-leader org-present yasnippet terraform-mode restart-emacs lsp-java company-lsp yasnippet-snippets yassnippet lsp-mode company-quickhelp flx virtualenvwrapper eshell-prompt-extras shell-pop org-plus-contrb org-plus-contrib org-contrib exec-path-from-shell magit-evil evil-magit page-break-lines company counsel multi-term diminish cider inf-clojure expand-region helm use-package clojure-mode counsel-projectile evil-collection smartparens rainbow-delimiters indent-guide ivy-rich gh-md markdown-mode evil-org company-mode projectile flycheck-pos-tip flycheck dashboard magit yaml-mode general neotree ivy which-key evil python-mode color-theme-sanityinc-tomorrow groovy-mode)))
  '(shell-pop-full-span t)
  '(shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell)))))
  '(shell-pop-window-size 50)
@@ -49,8 +47,10 @@
      (340 . "#f0c674")
      (360 . "#b5bd68"))))
  '(vc-annotate-very-old-color nil)
- '(vterm-shell "/usr/local/bin/zsh")
- '(window-divider-mode nil))
+ '(window-divider-mode nil)
+ '(yas-snippet-dirs
+   (quote
+    ("/Users/dbruc1/.emacs.d/snippets" yasnippet-snippets-dir))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
